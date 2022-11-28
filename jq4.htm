@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Document</title>
+        <style>
+            body{ margin: 0; overflow: hidden;}
+            #puzzle {width: 800px; height: 600px; box-shadow: 0 0 10px #666; position: relative;}
+        </style>
+    </head>
+    <body>
+        <div id="puzzle"></div>
+        <button id="ok">Start</button>
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.1/jquery.min.js"></script>
+        <script src="https://code.jquery.com/ui/1.13.2/jquery-ui.js"></script>
+        <script>
+            $(() => {
+                const puzzle = $("#puzzle")
+                
+                createPuzzle('sebuhi.jpeg')
+                setTimeout(destroyPuzzle, 1000)
+
+              
+
+            $("#ok")
+            .css({
+                width: '150px',
+                height: '40px',
+                margin: '20px 5px',
+                color: '#fff',
+                borderRadius: '5px',
+                backgroundColor: 'linear-gradient(#ee1010, #2d70fd)',
+                border: 'none',
+                cursor: 'pointer',
+
+            })
+            
+            .click(function(){
+                $("body").append('<div id="timer">Oyunun bitməyinə qalan vaxt:90</div>')
+                $("#timer").css({
+                    fontSize: '3em',
+                    textAlign: 'left',
+                    color: 'linear-gradient(#1433ac, #c40d2c)'
+                })
+                
+                let yazi = 'Oyunun bitməyinə qalan vaxt:'
+                let sn = 89
+                let saat = setInterval(vaxt, 1000)
+                
+                function vaxt() { 
+                timer.innerHTML = yazi + sn-- 
+                setTimeout(gameOver, 9000)
+            }
+            })
+
+                
+
+                function gameOver(){
+                    for (let i = 0; i < 6; i++) {
+                        for (let j = 0; j < 8; j++) {
+                            let ids = `c${i}${j}`
+                            puzzle.append(`<div id="${ids}"></div>`)
+                            $("#"+ids)
+                            .css({
+                                
+                                background: `url('/img/game.jpg') ${-100*j}px ${-100*i}px`,
+                                position: 'absolute',
+                                width: '100px',
+                                height: '100px',
+                                
+                            })
+                            .animate({
+                                transform: `rotate(0deg)`,
+                                top: i * 100 + 'px',
+                                left: j * 100 + 'px',
+                            }), 500
+                            
+                        }
+                    
+                    }
+                }
+
+                function destroyPuzzle(){
+                    for (let i = 0; i < 6; i++) {
+                        for (let j = 0; j < 8; j++) {
+                            let id= `p${i}${j}`
+                            $("#"+id)
+                            .animate({
+                                top: rand(0, $('body').height() - 100) + 'px',
+                                left: rand(800, $('body').width() - 100) + 'px',
+                                
+                            }, 500)
+                            .css({
+                                transform: `rotate(${rand(-20, 20)}deg)`
+                            })
+                            .draggable({
+                                snap: "div",
+                                start: function(){
+                                    $(this).css({transform: `rotate(0)`})
+                                },
+                                stop: function(){
+                                    $(this).css({
+                                       top:  Math.round($(this).offset().top / 100)* 100 + 'px',
+                                       left: Math.round($(this).offset().left / 100) * 100 + 'px'
+                                    })
+                                    yoxlamaq()
+                                }
+                            })
+                        }
+                    }
+                }
+
+                function createPuzzle(image){
+                    for (let i = 0; i < 6; i++) {
+                        for (let j = 0; j < 8; j++) {
+                            let id = `p${i}${j}`
+                            puzzle.append(`<div id="${id}"></div>`)
+                            $("#"+id).css({
+                                position: 'absolute',
+                                background: `url('/img/${image}') ${-100*j}px ${-100*i}px`,
+                                boxShadow: '0 0 10px #666',
+                                width: '100px',
+                                height: '100px',
+                                top: i * 100 + 'px',
+                                left: j * 100 + 'px'
+                            })
+                        }
+                    
+                    }
+                }
+                function yoxlamaq() {
+                    for (let i = 0; i < 6; i++) {
+                        for (let j = 0; j < 8; j++) {
+                            let id = `p${i}${j}`
+                            if($(`#p${i}${j}`).offset().left == j * 100 && $(`#p${i}${j}`).offset().top == i * 100)  {
+                                console.log('duz');
+                            }
+                        }
+                    
+                    }
+                }
+                function rand(min, max) {
+                    return Math.floor(Math.random() * (max - min + 1) ) + min;
+                }
+            })
+        </script>
+    </body>
+</html>
